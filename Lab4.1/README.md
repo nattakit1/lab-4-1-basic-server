@@ -39,4 +39,13 @@ curl http://localhost:3000/students/major/Computer%20Science
 
 <img width="467" height="310" alt="image" src="https://github.com/user-attachments/assets/d3b730b2-892f-4df9-a98f-cf1d5fdf33b2" />
 
-(Express only) GET /stats
+## (Express only) GET /stats
+
+<img width="299" height="240" alt="image" src="https://github.com/user-attachments/assets/499c1ab2-b194-461d-86ee-8a786290f5bb" />
+
+---
+
+http://localhost:3001/stats
+
+<img width="264" height="214" alt="image" src="https://github.com/user-attachments/assets/606748ba-6fbf-4eb0-8c5c-7297e7416733" />
+
