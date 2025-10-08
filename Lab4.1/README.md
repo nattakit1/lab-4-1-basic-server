@@ -17,19 +17,26 @@ npm run start:http
 ## 3. Test Endpoints
 
 GET /
+
 <img width="817" height="37" alt="image" src="https://github.com/user-attachments/assets/2e503ce3-9872-4fef-b2a1-e2b99d6f404c" />
 
 
 GET /students
+
 curl http://localhost:3000/students
 
-<img width="770" height="48" alt="image" src="https://github.com/user-attachments/assets/257f8bf7-22a0-40e9-8ed9-1268eabe00f3" />
 <img width="305" height="427" alt="image" src="https://github.com/user-attachments/assets/67446737-c913-42d6-9160-4a4ce242cff6" />
 
 GET /students/:id
 
+curl http://localhost:3000/students/1
 
+<img width="283" height="203" alt="image" src="https://github.com/user-attachments/assets/43aa6766-c66a-4b2f-99dc-eab68542c199" />
 
 GET /students/major/:major
+
+curl http://localhost:3000/students/major/Computer%20Science
+
+<img width="467" height="310" alt="image" src="https://github.com/user-attachments/assets/d3b730b2-892f-4df9-a98f-cf1d5fdf33b2" />
 
 (Express only) GET /stats
