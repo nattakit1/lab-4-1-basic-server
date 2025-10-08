@@ -10,6 +10,7 @@ router.post('/', validateFeedback, async (req, res) => {
     res.json({ success: true, message: 'Feedback saved', data: saved });
 });
 
+
 // GET /api/feedback/stats
 router.get('/stats', async (req, res) => {
     const feedback = await readJsonFile('feedback.json');
