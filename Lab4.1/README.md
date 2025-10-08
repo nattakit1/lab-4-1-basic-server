@@ -10,3 +10,6 @@ npm install
 HTTP server:
 ```bash
 npm run start:http
+```
+
+<img width="314" height="284" alt="image" src="https://github.com/user-attachments/assets/0446b2d6-f186-4430-b976-6d50b5dae648" />
