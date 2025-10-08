@@ -5,7 +5,6 @@ const router = express.Router();
 
 const FOODS_FILE = path.join(__dirname, '../data/foods.json');
 
-// Helper function: อ่านข้อมูลอาหาร
 const loadFoods = () => {
     try {
         const data = fs.readFileSync(FOODS_FILE, 'utf8');
@@ -16,23 +15,40 @@ const loadFoods = () => {
     }
 };
 
-// GET /api/foods - ดึงรายการอาหารทั้งหมด (พร้อม filtering)
+// GET /api/foods
 router.get('/', (req, res) => {
     try {
         let foods = loadFoods();
-        
-        // TODO: เพิ่ม query parameters สำหรับ filtering:
-        // - search: ค้นหาจากชื่อหรือคำอธิบาย
-        // - category: กรองตามประเภทอาหาร
-        // - maxSpicy: กรองระดับความเผ็ดไม่เกินที่กำหนด
-        // - vegetarian: กรองอาหารมังสวิรัติ (true/false)
-        // - available: กรองอาหารที่พร้อมเสิร์ฟ (true/false)
-        // - maxPrice: กรองราคาไม่เกินที่กำหนด
-        
         const { search, category, maxSpicy, vegetarian, available, maxPrice } = req.query;
-        
-        // TODO: ทำ filtering logic ตาม query parameters
-        
+
+        // Filtering
+        if (search) {
+            const lower = search.toLowerCase();
+            foods = foods.filter(f =>
+                f.name.toLowerCase().includes(lower) ||
+                f.description.toLowerCase().includes(lower)
+            );
+        }
+        if (category) {
+            foods = foods.filter(f => f.category === category);
+        }
+        if (maxSpicy) {
+            const max = parseInt(maxSpicy);
+            foods = foods.filter(f => f.spicyLevel <= max);
+        }
+        if (vegetarian) {
+            const veg = vegetarian === 'true';
+            foods = foods.filter(f => f.vegetarian === veg);
+        }
+        if (available) {
+            const avail = available === 'true';
+            foods = foods.filter(f => f.available === avail);
+        }
+        if (maxPrice) {
+            const price = parseFloat(maxPrice);
+            foods = foods.filter(f => f.price <= price);
+        }
+
         res.json({
             success: true,
             data: foods,
@@ -47,17 +63,36 @@ router.get('/', (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching foods'
-        });
+        res.status(500).json({ success: false, message: 'Error fetching foods' });
     }
 });
 
-// TODO: GET /api/foods/:id - ดึงข้อมูลอาหารตาม ID
+// GET /api/foods/:id
+router.get('/:id', (req, res) => {
+    const foods = loadFoods();
+    const id = parseInt(req.params.id);
+    const food = foods.find(f => f.id === id);
+    if (food) {
+        res.json({ success: true, data: food });
+    } else {
+        res.status(404).json({ success: false, message: 'Food not found' });
+    }
+});
 
-// TODO: GET /api/foods/category/:category - ดึงอาหารตามประเภท
+// GET /api/foods/category/:category
+router.get('/category/:category', (req, res) => {
+    const foods = loadFoods();
+    const category = req.params.category;
+    const filtered = foods.filter(f => f.category === category);
+    res.json({ success: true, data: filtered, total: filtered.length });
+});
 
-// TODO: GET /api/foods/random - ดึงอาหารแบบสุ่ม 1 จาน
+// GET /api/foods/random
+router.get('/random', (req, res) => {
+    const foods = loadFoods();
+    if (foods.length === 0) return res.status(404).json({ success: false, message: 'No foods available' });
+    const randomIndex = Math.floor(Math.random() * foods.length);
+    res.json({ success: true, data: foods[randomIndex] });
+});
 
 module.exports = router;

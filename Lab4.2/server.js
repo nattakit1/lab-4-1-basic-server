@@ -2,8 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
-// TODO: import foodRoutes จาก './routes/foods'
-// TODO: import logger middleware จาก './middleware/logger'
+// import foodRoutes และ logger
+const foodRoutes = require('./routes/foods');
+const logger = require('./middleware/logger');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,8 +13,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
-
-// TODO: ใช้ logger middleware
+app.use(logger);
 
 // Routes
 app.get('/', (req, res) => {
@@ -31,13 +31,41 @@ app.get('/', (req, res) => {
     });
 });
 
-// TODO: ใช้ foodRoutes สำหรับ '/api/foods'
+app.use('/api/foods', foodRoutes);
 
-// TODO: สร้าง route GET /api/docs
-// ส่งข้อมูล API documentation
+// GET /api/docs
+app.get('/api/docs', (req, res) => {
+    res.json({
+        success: true,
+        message: 'Food API Documentation',
+        endpoints: {
+            '/api/foods': 'GET all foods, support filtering with query parameters',
+            '/api/foods/:id': 'GET food by ID',
+            '/api/foods/category/:category': 'GET foods by category',
+            '/api/foods/random': 'GET random food',
+            '/api/docs': 'GET API documentation',
+            '/api/stats': 'GET statistics'
+        },
+        queryParameters: ['search', 'category', 'maxSpicy', 'vegetarian', 'available', 'maxPrice']
+    });
+});
 
-// TODO: สร้าง route GET /api/stats  
-// ส่งสถิติต่างๆ เช่น จำนวนเมนูทั้งหมด, จำนวนแต่ละหมวด, etc.
+// GET /api/stats
+app.get('/api/stats', (req, res) => {
+    const foods = require('./data/foods.json');
+    const total = foods.length;
+    const categories = {};
+    foods.forEach(f => {
+        categories[f.category] = (categories[f.category] || 0) + 1;
+    });
+    const available = foods.filter(f => f.available).length;
+    res.json({
+        success: true,
+        totalFoods: total,
+        categories,
+        availableFoods: available
+    });
+});
 
 // 404 handler
 app.use('*', (req, res) => {

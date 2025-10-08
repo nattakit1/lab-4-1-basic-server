@@ -1,0 +1,21 @@
+# บล็อกโฟลเดอร์ node_modules
+node_modules/
+
+# บล็อกไฟล์ log
+*.log
+
+# บล็อกไฟล์ build/output (ถ้ามี)
+dist/
+build/
+
+# บล็อกไฟล์ระบบปฏิบัติการ
+.DS_Store
+Thumbs.db
+
+# บล็อกไฟล์ environment variables
+.env
+
+# บล็อกไฟล์ npm debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
